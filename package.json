@@ -23,6 +23,6 @@
     "sqlite3": "^5.0.0"
   },
   "engines": {
-    "yarn": "1."
+    "yarn": "1.x"
   }
 }
