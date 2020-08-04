@@ -8,6 +8,8 @@ app.use(cors());
 app.use(express.json());
 app.use(routes);
 
-app.listen(3333,() => {
+const port = process.env.PORT || 8080;
+
+app.listen(port,() => {
     console.log('START SERVE PORT 3333');
 });
