@@ -58,37 +58,45 @@ export default class ClassesController {
     
         const trx = await db.transaction();
 
-        const insertedUsersIds = await trx('users').insert({
+        try {
+
+          const insertedUsersIds = await trx('users').insert({
             name,
             avatar,
             bio,
             whatsapp
-        });
-    
-        const user_id = insertedUsersIds[0];
-    
-        const insertedClassesIds = await trx('classes').insert({
-            subject,
-            cost,
-            user_id
-        });
-    
-        const class_id = insertedClassesIds[0];
-    
-        const classSchedule = schedule.map((item: ScheduleItem) => {
-            return {
-                class_id,
-                week_day: item.week_day,
-                from: convertHourToMinutes(item.from),
-                to: convertHourToMinutes(item.to)
-            };
-        });
-    
-        await trx('class_schedule').insert(classSchedule);
-    
-        await trx.commit();
-    
-        return res.send();
+          });
+      
+          const user_id = insertedUsersIds[0];
+      
+          const insertedClassesIds = await trx('classes').insert({
+              subject,
+              cost,
+              user_id
+          });
+      
+          const class_id = insertedClassesIds[0];
+      
+          const classSchedule = schedule.map((item: ScheduleItem) => {
+              return {
+                  class_id,
+                  week_day: item.week_day,
+                  from: convertHourToMinutes(item.from),
+                  to: convertHourToMinutes(item.to)
+              };
+          });
+      
+          await trx('class_schedule').insert(classSchedule);
+      
+          await trx.commit();
+      
+          return res.status(201).send();
+          
+        } catch (error) {
+          await trx.rollback();
+        }
+
+        
     }
 
 }
